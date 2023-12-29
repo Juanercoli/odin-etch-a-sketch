@@ -1,8 +1,18 @@
-let container = document.querySelector("#grid-container");
-createGrid(16);
+// Handling grid size slider
+const gridSizeSlider = document.querySelector("#grid-size-slider");
+const gridSizeValue = document.querySelector("#grid-size-value");
+gridSizeValue.textContent = gridSizeSlider.value + "x" + gridSizeSlider.value;
+createGrid(gridSizeSlider.value);
+gridSizeSlider.addEventListener("input", (e) => {
+  createGrid(gridSizeSlider.value);
+  gridSizeValue.textContent = gridSizeSlider.value + "x" + gridSizeSlider.value;
+});
 
 /* Create grid container */
 function createGrid(gridSize) {
+  const container = document.querySelector("#grid-container");
+  // Clean container
+  container.innerHTML = "";
   // Get container size
   const gridContainerSize = parseInt(
     window.getComputedStyle(container).getPropertyValue("max-width")
