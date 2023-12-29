@@ -1,12 +1,6 @@
-// Handling grid size slider
-const gridSizeSlider = document.querySelector("#grid-size-slider");
-const gridSizeValue = document.querySelector("#grid-size-value");
-gridSizeValue.textContent = gridSizeSlider.value + "x" + gridSizeSlider.value;
-createGrid(gridSizeSlider.value);
-gridSizeSlider.addEventListener("input", (e) => {
-  createGrid(gridSizeSlider.value);
-  gridSizeValue.textContent = gridSizeSlider.value + "x" + gridSizeSlider.value;
-});
+createGridSizeSlider();
+eraserBtn();
+clearBtn();
 
 /* Create grid container */
 function createGrid(gridSize) {
@@ -25,6 +19,7 @@ function createGrid(gridSize) {
     // Create columns
     for (let i = 0; i < gridSize; i++) {
       let column = document.createElement("div");
+      addPixelListeners(column);
       column.className = "grid-column";
       column.style["width"] = gridContainerSize / gridSize + "px";
       column.style["height"] = gridContainerSize / gridSize + "px";
@@ -32,4 +27,51 @@ function createGrid(gridSize) {
     }
     container.append(row);
   }
+}
+
+/* Grid size slider */
+function createGridSizeSlider() {
+  const gridSizeSlider = document.querySelector("#grid-size-slider");
+  const gridSizeValue = document.querySelector("#grid-size-value");
+  gridSizeValue.textContent = gridSizeSlider.value + "x" + gridSizeSlider.value;
+  createGrid(gridSizeSlider.value);
+  gridSizeSlider.addEventListener("input", () => {
+    createGrid(gridSizeSlider.value);
+    gridSizeValue.textContent =
+      gridSizeSlider.value + "x" + gridSizeSlider.value;
+  });
+}
+
+/* Paint events */
+let isDrawing = false;
+let color = document.querySelector("#color");
+function addPixelListeners(pixel) {
+  pixel.addEventListener("mouseenter", () => {
+    pixel.style["border"] = "1px solid blue";
+  });
+  pixel.addEventListener("mousedown", () => {
+    isDrawing = true;
+    pixel.style["background-color"] = color.value;
+  });
+  pixel.addEventListener("mouseup", () => {
+    isDrawing = false;
+  });
+  pixel.addEventListener("mousemove", () => {
+    if (isDrawing) pixel.style["background-color"] = color.value;
+  });
+  pixel.addEventListener("mouseout", () => {
+    pixel.style["border"] = "1px solid black";
+  });
+}
+
+function eraserBtn() {
+  document.querySelector("#eraser").addEventListener("click", () => {
+    color.value = "#ffffff";
+  });
+}
+
+function clearBtn() {
+  document.querySelector("#clear").addEventListener("click", () => {
+    createGrid(document.querySelector("#grid-size-slider").value);
+  });
 }
